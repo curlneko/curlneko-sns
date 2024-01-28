@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Layout from './pages/Layout';
 import ErrorPage from './pages/ErrorPage';
+import HomePage from './pages/HomePage';
 
 //パス・ページ設定
 const router = createBrowserRouter([
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: "none",
+        element: <HomePage />,
       },
       {
         path: "test",
