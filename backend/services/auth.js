@@ -36,11 +36,10 @@ class Auth {
     };
 
     // DB処理
-    var result = {};
+    let result = {};
     try {
       result = await user.searchMany(where);
     } catch (e) {
-      console.log(e);
       throw new MySqlDBError("fail to login", "");
     }
 
@@ -62,19 +61,21 @@ class Auth {
       id: result[0].id,
       name: result[0].name,
       email: result[0].email,
+      exp: Math.floor(Date.now() / 1000) + (60 * 60),
     };
     const token = jwt.sign(payload, "secret");
     return token;
   }
 
   async verifyToken(token) {
-    jwt.verify(token, "secret", (error, user) => {
+    const result = jwt.verify(token, "secret", (error, payload) => {
       if (error) {
         throw new AuthError("token is unvalid", "token");
       } else {
-        return user;
+        return payload;
       }
     });
+    return result;
   }
 }
 
