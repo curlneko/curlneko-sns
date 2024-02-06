@@ -51,18 +51,26 @@ router.post("/login", async (req, res, next) => {
 
 //Token確認API
 router.get("/verify", async (req, res, next) => {
-  const token = req.headers["authorization"];
-
-  try {
-    const user = await auth.verifyToken(token);
-    return res.json({
-      user,
-    });
-  } catch (e) {
-    console.log(e);
+  const bearerHeader = req.headers["Authorization"];
+  
+  if (typeof bearerHeader !== "undefined") {
+    const token = bearerHeader.split(' ')[1];
+    try {
+      const user = await auth.verifyToken(token);
+      return res.json({
+        user,
+      });
+    } catch (e) {
+      console.log(e);
+      return res.status(401).json({
+        error: e.name,
+        message: e.message,
+      });
+    }
+  } else {
     return res.status(403).json({
-      error: e.name,
-      message: e.message,
+      error: "",
+      message: "you didn't login",
     });
   }
 });
