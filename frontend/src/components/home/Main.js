@@ -26,15 +26,15 @@ export default function Main() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch(url, { method: "GET" })
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("err");
-      });
+    // fetch(url, { method: "GET" })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setUsers(data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     console.log("err");
+    //   });
   }, []);
 
   const { token } = theme.useToken();
@@ -99,9 +99,9 @@ export default function Main() {
             />
           }
           actions={[
-            <LikeOutlined key="like"/>,
-            <CommentOutlined key="comment"/>,
-            <ShareAltOutlined key="share"/>,
+            <LikeOutlined key="like" />,
+            <CommentOutlined key="comment" />,
+            <ShareAltOutlined key="share" />,
           ]}
           bordered={false}
         >

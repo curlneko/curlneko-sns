@@ -1,14 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const jwt = require("jsonwebtoken");
-
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
-
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-
 const Auth = require("../services/auth");
 const auth = new Auth();
 
@@ -33,16 +25,24 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
+  console.log(req.body);
 
   try {
     const token = await auth.login(email, password);
     console.log(token);
-    return res.status(200).json({
-      token: token,
+
+    res.cookie("jwt", token, {
+      sameSite: "none",
+      secure: true,
+      maxAge: 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.status(200).json({
       status: "success",
     });
   } catch (e) {
-    return res.status(400).json({
+    res.status(400).json({
       error: e.name,
       message: e.message,
     });
@@ -51,26 +51,16 @@ router.post("/login", async (req, res, next) => {
 
 //Token確認API
 router.get("/verify", async (req, res, next) => {
-  const bearerHeader = req.headers["Authorization"];
-  
-  if (typeof bearerHeader !== "undefined") {
-    const token = bearerHeader.split(' ')[1];
-    try {
-      const user = await auth.verifyToken(token);
-      return res.json({
-        user,
-      });
-    } catch (e) {
-      console.log(e);
-      return res.status(401).json({
-        error: e.name,
-        message: e.message,
-      });
-    }
-  } else {
-    return res.status(403).json({
-      error: "",
-      message: "you didn't login",
+  const token = req.cookies.jwt;
+  console.log(token);
+  try {
+    const user = await auth.verifyToken(token);
+    return res.json({
+      status: "verify success",
+    });
+  } catch (e) {
+    return res.status(401).json({
+      message: "you are not login",
     });
   }
 });
