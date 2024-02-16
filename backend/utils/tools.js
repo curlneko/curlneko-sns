@@ -1,4 +1,4 @@
-const Auth = require("../services/auth");
+const Auth = require("../services/authService");
 const auth = new Auth();
 
 async function verify(token) {

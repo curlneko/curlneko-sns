@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const User = require("../repository/user");
+const User = require("../repository/userRepository");
 const user = new User();
 
 const { MySqlDBError, AuthError } = require("../exceptions/exceptions");

@@ -6,9 +6,8 @@ const logger = require("morgan");
 const cors = require("cors");
 
 // Routerの設定
-const indexRouter = require("./routes/index");
-const authRouter = require("./routes/auth");
-const usersRouter = require("./routes/users");
+const authRouter = require("./routes/auth/authController");
+const usersRouter = require("./routes/user/userController");
 
 const verify = require("./utils/tools");
 
@@ -50,18 +49,26 @@ app.use("/*", async (req, res, next) => {
       if (result === true) {
         console.log("you have login")
         return res.status(200).json({
-          message: "you have login",
+          result: {
+            status: true,
+            statusCode: "",
+            message: "you have login",
+          }
         });
       } else {
         next();
       }
     }
-  } else if(url === "/auth/logout"){
+  } else if (url === "/auth/logout") {
     console.log("want to logout")
     if (token === undefined) {
       console.log("undefined");
       res.status(200).json({
-        message: "you have logout",
+        result: {
+          status: false,
+          statusCode: "",
+          message: "you have logout",
+        }
       });
     } else {
       const result = await verify(token)
@@ -71,16 +78,27 @@ app.use("/*", async (req, res, next) => {
       } else {
         console.log("you have logout")
         res.status(200).json({
-          message: "you have logout",
+          result: {
+            status: false,
+            statusCode: "",
+            message: "you have logout",
+          }
         });
       }
     }
-  }else {
-    console.log("do others except login")
+  } else if (url === "/auth/register") {
+    console.log("want to register")
+    next();
+  } else {
+    console.log("do others except auth")
     if (token === undefined) {
       console.log("undefined");
       res.status(401).json({
-        message: "you are not login",
+        result: {
+          status: false,
+          statusCode: "",
+          message: "you are not login",
+        }
       });
     } else {
       const result = await verify(token)
@@ -88,7 +106,11 @@ app.use("/*", async (req, res, next) => {
         next();
       } else {
         res.status(401).json({
-          message: "you are not login",
+          result: {
+            status: false,
+            statusCode: "",
+            message: "you are not login",
+          }
         });
       }
     }
@@ -97,7 +119,6 @@ app.use("/*", async (req, res, next) => {
 });
 
 // Path設定
-app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
 
