@@ -10,6 +10,7 @@ const { MySqlDBError, AuthError } = require("../exceptions/exceptions");
 
 class Auth {
   async register(name, email, password) {
+    console.log("service register")
     // passwordのハッシュ化
     const hashedPassword = bcrypt.hashSync(password, saltRounds);
 
@@ -23,8 +24,10 @@ class Auth {
     // DB処理
     try {
       const result = await user.insert(data);
+      console.log(result)
       return result;
     } catch (e) {
+      console.log(e)
       throw new MySqlDBError("fail to register", e.meta.target);
     }
   }

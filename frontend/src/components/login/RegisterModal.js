@@ -61,110 +61,113 @@ export default function RegisterModal(props) {
             default:
         }
     };
-    
 
-    return (<Modal
-        title="Register"
-        centered
-        open={props.open}
-        onOk={() => props.setOpen(false)}
-        onCancel={() => props.setOpen(false)}
-        width={1000}
-    >
-        <Form
-            {...layout}
-            form={form}
-            name="control-hooks"
-            onFinish={onFinish}
-            style={{
-                maxWidth: 600,
-            }}
+
+    return (
+        <Modal
+            title="Register"
+            centered
+            open={props.open}
+            onOk={() => props.setOpen(false)}
+            onCancel={() => props.setOpen(false)}
+            width={1000}
         >
-            <Form.Item
-                name="note"
-                label="Note"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
+            <Form
+                {...layout}
+                form={form}
+                name="control-hooks"
+                onFinish={onFinish}
+                style={{
+                    maxWidth: 600,
+                }}
             >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="note"
-                label="Note"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="note"
-                label="Note"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                name="gender"
-                label="Gender"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Select
-                    placeholder="Select a option and change input text above"
-                    onChange={onGenderChange}
-                    allowClear
+                <Form.Item
+                    name="registerName"
+                    label="Name"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
                 >
-                    <Option value="male">male</Option>
-                    <Option value="female">female</Option>
-                    <Option value="other">other</Option>
-                </Select>
-            </Form.Item>
-            <Form.Item
-                noStyle
-                shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-            >
-                {({ getFieldValue }) =>
-                    getFieldValue('gender') === 'other' ? (
-                        <Form.Item
-                            name="customizeGender"
-                            label="Customize Gender"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    ) : null
-                }
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-                <Space>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                    <Button htmlType="button" onClick={onReset}>
-                        Reset
-                    </Button>
-                    <Button type="link" htmlType="button" onClick={onFill}>
-                        Fill form
-                    </Button>
-                </Space>
-            </Form.Item>
-        </Form>
-    </Modal>);
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    autoComplete="chrome-off"
+                    name="registerEmail"
+                    label="Email"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    autoComplete="chrome-off"
+                    name="registerPassword"
+                    label="Password"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
+                <Form.Item
+                    name="gender"
+                    label="Gender"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Select
+                        placeholder="Select a option and change input text above"
+                        onChange={onGenderChange}
+                        allowClear
+                    >
+                        <Option value="male">male</Option>
+                        <Option value="female">female</Option>
+                        <Option value="other">other</Option>
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    noStyle
+                    shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+                >
+                    {({ getFieldValue }) =>
+                        getFieldValue('gender') === 'other' ? (
+                            <Form.Item
+                                name="customizeGender"
+                                label="Customize Gender"
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        ) : null
+                    }
+                </Form.Item>
+                <Form.Item {...tailLayout}>
+                    <Space>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                        <Button htmlType="button" onClick={onReset}>
+                            Reset
+                        </Button>
+                        <Button type="link" htmlType="button" onClick={onFill}>
+                            Fill form
+                        </Button>
+                    </Space>
+                </Form.Item>
+            </Form>
+        </Modal>);
 }

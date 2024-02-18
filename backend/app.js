@@ -33,9 +33,6 @@ app.use(express.static(path.join(__dirname, "public")));
 //. 全てのリクエストに対して前処理
 app.use("/*", async (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log(req.originalUrl);
-  console.log(token);
-
   const url = req.originalUrl;
 
   if (url === "/auth/login") {
@@ -88,7 +85,7 @@ app.use("/*", async (req, res, next) => {
     }
   } else if (url === "/auth/register") {
     console.log("want to register")
-    next();
+    next()
   } else {
     console.log("do others except auth")
     if (token === undefined) {

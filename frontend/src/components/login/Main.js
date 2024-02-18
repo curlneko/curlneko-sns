@@ -58,8 +58,6 @@ export default function Main() {
     mutate(values);
   };
 
-
-
   if (loginStatus === "success") {
     if (loginData.result.status === true) {
       dispatch(login())
@@ -77,13 +75,15 @@ export default function Main() {
     setIsOkToVerify(true);
   }
 
-  if (verifyStatus === "success" ) {
+  if (verifyStatus === "success") {
     if (verifyData.result.status === true) {
       dispatch(login())
       navigate("/home");
       return <></>;
     } else {
-      dispatch(logout())
+      if (open === false) {
+        dispatch(logout())
+      }
       return (
         <Layout style={layoutStyle}>
           <Row justify="center">
@@ -125,7 +125,6 @@ export default function Main() {
                 >
                   <Input.Password />
                 </Form.Item>
-
                 <Form.Item
                   name="remember"
                   valuePropName="checked">
@@ -139,8 +138,8 @@ export default function Main() {
                 </Form.Item>
               </Form>
             </Col>
-            {/* <Button type="link" onClick={setOpen(true)}>Register</Button> */}
           </Row>
+          <Button type="link" onClick={() => setOpen(true)}>Register</Button>
           <RegisterModal
             open={open}
             setOpen={setOpen} />
