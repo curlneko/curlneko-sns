@@ -20,6 +20,12 @@ import {
   Select
 } from "antd";
 
+import {
+  LockOutlined,
+  UserOutlined
+}
+  from '@ant-design/icons';
+
 const { Header, Footer, Sider, Content } = Layout;
 
 const { Title } = Typography;
@@ -41,7 +47,7 @@ const layoutStyle = {
 };
 
 export default function Main() {
-  const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const [isOkToVerify, setIsOkToVerify] = useState(false)
   const { status: verifyStatus, data: verifyData } = useQueryVerify(isOkToVerify);
@@ -81,7 +87,7 @@ export default function Main() {
       navigate("/home");
       return <></>;
     } else {
-      if (open === false) {
+      if (openModal === false) {
         dispatch(logout())
       }
       return (
@@ -101,7 +107,6 @@ export default function Main() {
                 autoComplete="off"
               >
                 <Form.Item
-                  label="email"
                   name="email"
                   rules={[
                     {
@@ -110,11 +115,10 @@ export default function Main() {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input prefix={<UserOutlined />} placeholder="email" />
                 </Form.Item>
 
                 <Form.Item
-                  label="password"
                   name="password"
                   rules={[
                     {
@@ -123,7 +127,7 @@ export default function Main() {
                     },
                   ]}
                 >
-                  <Input.Password />
+                  <Input.Password prefix={<LockOutlined />} placeholder="Password" />
                 </Form.Item>
                 <Form.Item
                   name="remember"
@@ -131,18 +135,21 @@ export default function Main() {
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                </Form.Item>
+                <Row justify="center">
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Row>
               </Form>
             </Col>
           </Row>
-          <Button type="link" onClick={() => setOpen(true)}>Register</Button>
+
+          <Button type="link" onClick={() => setOpenModal(true)}>Register</Button>
           <RegisterModal
-            open={open}
-            setOpen={setOpen} />
+            openModal={openModal}
+            setOpenModal={setOpenModal} />
         </Layout>
       );
     }

@@ -1,40 +1,19 @@
 import { useQuery, useMutation } from "@tanstack/react-query"
 
-const serverURL = "http://localhost:8083/auth"
+const serverURL = "http://localhost:8083/profile"
 
-export const useQueryVerify = (enabled) => {
-    return useQuery({
-        //キャッシュを取得する時のキー
-        queryKey: "useQueryVerify",
-        //フェッチする関数
-        queryFn: async () => {
-            const res = await fetch(serverURL + '/verify', {
-                method: "GET",
-                credentials: "include",
-            });
-            return res.json();
-        },
-        //キャッシュを保持する時間
-        cacheTime: 10000,
-        //データが最新であるとみなす時間
-        staleTime: 0,
-        enabled: enabled,
-    })
-}
-
-
-export const useMutationLogin = (values) => {
+export const useMutationUploadPicture = (values) => {
     return useMutation({
-        mutationKey: "useMutationLogin",
+        mutationKey: "useMutationUploadPicture",
         //フェッチする関数
         mutationFn: async (values) => {
-            const res = await fetch(serverURL + '/login', {
-                method: "POST",
+            const res = await fetch(serverURL, {
+                method: "PUT",
                 headers: {
-                    "Content-Type": "application/json",
+                    // "Content-Type": "multipart/form-data",
                 },
                 credentials: "include",
-                body: JSON.stringify(values),
+                body: values,
             });
             return res.json();
         },

@@ -3,8 +3,8 @@ const auth = new Auth();
 
 async function verify(token) {
   try {
-    const user = await auth.verifyToken(token);
-    return true;
+    const result = await auth.verifyToken(token);
+    return result;
   } catch (e) {
     return false;
   }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useMutationRegister } from "../../api/auth/api";
+
 import {
     Button,
     Form,
@@ -26,18 +28,16 @@ const tailLayout = {
     },
 };
 export default function RegisterModal(props) {
+    const { status, data, mutate } = useMutationRegister();
+
     const [form] = Form.useForm();
     const onReset = () => {
         form.resetFields();
     };
-    const onFill = () => {
-        form.setFieldsValue({
-            note: 'Hello world!',
-            gender: 'male',
-        });
-    };
+
 
     const onFinish = (values) => {
+        mutate(values);
         console.log(values);
     };
 
@@ -62,15 +62,24 @@ export default function RegisterModal(props) {
         }
     };
 
+    if (status === "success") {
+        if (data.result.status === true) {
+            // setPost("");
+            props.setOpenModal(false);
+            form.resetFields();
+        }
+    }
+
 
     return (
         <Modal
             title="Register"
             centered
-            open={props.open}
-            onOk={() => props.setOpen(false)}
-            onCancel={() => props.setOpen(false)}
-            width={1000}
+            open={props.openModal}
+            onOk={() => props.setOpenModal(false)}
+            onCancel={() => props.setOpenModal(false)}
+            width={800}
+            footer={[]}
         >
             <Form
                 {...layout}
@@ -82,7 +91,7 @@ export default function RegisterModal(props) {
                 }}
             >
                 <Form.Item
-                    name="registerName"
+                    name="name"
                     label="Name"
                     rules={[
                         {
@@ -94,7 +103,7 @@ export default function RegisterModal(props) {
                 </Form.Item>
                 <Form.Item
                     autoComplete="chrome-off"
-                    name="registerEmail"
+                    name="email"
                     label="Email"
                     rules={[
                         {
@@ -106,7 +115,7 @@ export default function RegisterModal(props) {
                 </Form.Item>
                 <Form.Item
                     autoComplete="chrome-off"
-                    name="registerPassword"
+                    name="password"
                     label="Password"
                     rules={[
                         {
@@ -162,9 +171,6 @@ export default function RegisterModal(props) {
                         </Button>
                         <Button htmlType="button" onClick={onReset}>
                             Reset
-                        </Button>
-                        <Button type="link" htmlType="button" onClick={onFill}>
-                            Fill form
                         </Button>
                     </Space>
                 </Form.Item>

@@ -7,9 +7,11 @@ const cors = require("cors");
 
 // Routerの設定
 const authRouter = require("./routes/auth/authController");
-const usersRouter = require("./routes/user/userController");
+const userRouter = require("./routes/user/userController");
+const postRouter = require("./routes/post/postController");
+const profileController = require("./routes/profile/profileController");
 
-const verify = require("./utils/tools");
+const verify = require("./middleware/tokenHandler");
 
 var app = express();
 
@@ -43,7 +45,7 @@ app.use("/*", async (req, res, next) => {
     } else {
       const result = await verify(token)
       console.log(result);
-      if (result === true) {
+      if (result) {
         console.log("you have login")
         return res.status(200).json({
           result: {
@@ -70,7 +72,7 @@ app.use("/*", async (req, res, next) => {
     } else {
       const result = await verify(token)
       console.log(result);
-      if (result === true) {
+      if (result) {
         next();
       } else {
         console.log("you have logout")
@@ -99,7 +101,8 @@ app.use("/*", async (req, res, next) => {
       });
     } else {
       const result = await verify(token)
-      if (result === true) {
+      if (result) {
+        res.locals.jwt = result;
         next();
       } else {
         res.status(401).json({
@@ -116,8 +119,10 @@ app.use("/*", async (req, res, next) => {
 });
 
 // Path設定
-app.use("/users", usersRouter);
+app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/post", postRouter);
+app.use("/profile", profileController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -132,7 +137,8 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  console.log(err)
+  // res.render("error");
 });
 
 module.exports = app;

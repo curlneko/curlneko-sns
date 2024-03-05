@@ -11,6 +11,7 @@ import reportWebVitals from "./reportWebVitals";
 import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "home",
         element: <HomePage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
     ],
   },
