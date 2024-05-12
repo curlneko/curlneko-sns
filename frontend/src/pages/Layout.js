@@ -1,23 +1,76 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux'
+import { login, logout } from '../features/auth/authSlice'
 import {
-  LaptopOutlined,
-  NotificationOutlined,
+  useQueryVerify,
+  useMutationLogout
+} from "../api/auth/api";
+
+import {
+  Layout,
+  Menu
+} from "antd";
+
+import {
   UserOutlined,
-} from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
+  HomeOutlined,
+  MessageOutlined,
+  LogoutOutlined,
+  NotificationOutlined
+} from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+import LoginPage from "./LoginPage";
 
-const headerItems = ["ホーム", "つながり", "メッセージ", "お知らせ"].map(
-  (key) => ({
-    key,
-    label: `${key}`,
-  })
-);
+const { Header, Footer } = Layout;
 
-const App = () => {
-  const { token } = theme.useToken();
+const ReturnLayout = () => {
+  const { status: logoutStatus, data: logoutData, mutate } = useMutationLogout();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  if (logoutStatus === "success") {
+    console.log(logoutData.result.status);
+    if (logoutData.result.status === true) {
+      dispatch(logout());
+      // navigate('/login');
+      return <LoginPage />
+    }
+  }
+
+  const headerItems = [
+    {
+      label: 'ホーム',
+      key: 'home',
+      icon: <HomeOutlined />,
+      onClick: () => navigate('/home'),
+    },
+    {
+      label: 'つながり',
+      key: 'friend',
+      icon: <UserOutlined />,
+    },
+    {
+      label: 'メッセージ',
+      key: 'message',
+      icon: <MessageOutlined />,
+      onClick: () => navigate('/chat'),
+    },
+    {
+      label: 'お知らせ',
+      key: 'notification',
+      icon: <NotificationOutlined />,
+    },
+    {
+      label: 'ログアウト',
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      onClick: () => mutate(),
+    },
+  ];
+
   return (
     <Layout>
       <Header
@@ -37,17 +90,15 @@ const App = () => {
             minWidth: 0,
           }}
         />
+
       </Header>
       <Layout
         style={{
-          padding: "24px 48px",
-          // background: token.colorBgContainer,
-          // borderRadius: token.borderRadiusLG,
+          padding: "24px",
         }}
       >
         <Outlet />
       </Layout>
-
       <Footer
         style={{
           textAlign: "center",
@@ -57,5 +108,36 @@ const App = () => {
       </Footer>
     </Layout>
   );
+}
+
+
+
+
+const App = () => {
+  const [isOkToVerify, setIsOkToVerify] = useState(false);
+  const { status: verifyStatus, data: verifyData } = useQueryVerify(isOkToVerify);
+
+  const authState = useSelector((state) => state.auth.value);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  if (authState === true) {
+    return <ReturnLayout />;
+  }
+
+  if (isOkToVerify === false) {
+    setIsOkToVerify(true);
+  }
+
+  if (verifyStatus === "success") {
+    if (verifyData.result.status === true) {
+      dispatch(login());
+      return <ReturnLayout />;
+    } else {
+      navigate("/login");
+      return <></>;
+    }
+  }
+
 };
 export default App;
