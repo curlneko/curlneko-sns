@@ -1,94 +1,39 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
 
 import {
   Layout,
-  Card,
   theme,
-  Modal,
-  message,
-  Upload,
-  Input,
   Image,
-  Form,
-  Button
+  Button,
+  Space
 } from "antd";
 
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useQueryPost } from "../../api/post/api";
+import PostCard from '../../components/common/PostCard';
+import ProfileModal from './ProfileModal';
 
-import { useMutationUploadPicture } from "../../api/profile/api";
-
-import { getBase64, validateFile } from "../../utils/utils";
-
-const { Header, Content, Footer, Sider } = Layout;
+const { Content } = Layout;
 
 export default function Main() {
-  const { status, data, mutate } = useMutationUploadPicture();
+  const [openModal, setOpenModal] = useState(false);
 
   const { token } = theme.useToken();
 
-  const [previewImage, setPreviewImage] = useState('');
+  const { status, data, refetch } = useQueryPost();
 
-
-  const [fileList, setFileList] = useState([]);
-
+  let posts = [];
   if (status === "success") {
-    if (data.result.status === true) {
-      if (fileList.length === 1 && fileList[0].status !== "done") {
-        setFileList([{ ...fileList[0], status: "done" }])
-        setPreviewImage(data.data.url);
-      }
-    }
-  }
-
-
-  const handleChange = async ({ fileList, file }) => {
-    console.log("handleChange");
-    console.log(file);
-
-    const validateResult = validateFile(file);
-    console.log(validateResult);
-    console.log(fileList);
-    console.log(file);
-
-    setFileList(fileList);
-
-    //アップロード時
-    if (fileList.length === 1) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-    } else {//削除時
-      setPreviewImage("");
-    }
-  };
-
-
-
-  const onFinish = async (values) => {
-    console.log(values);
-    const submitData = new FormData();
-    submitData.append("data", JSON.stringify(values));
-
-    // mutate(submitData);
-  };
-
-  const uploadImage = options => {
-    console.log("uploadImage")
-    const { onSuccess, onError, file, onProgress } = options;
-
-    const fmData = new FormData();
-    fmData.append("image", file);
-
-
-    mutate(fmData);
+    posts = data.data.toReversed().map(value => { 
+      return (<PostCard key={value.id} value={value} />) 
+    })
   }
 
   return (
     <Layout
       style={{
-        // display: "flex",
-        flexDirection: "row",
+        display: "flex",
+        flexDirection: "column",
         // alignItems: "center",
       }}
     >
@@ -97,74 +42,79 @@ export default function Main() {
           padding: "18px 12px",
           background: token.colorBgContainer,
           borderRadius: token.borderRadiusLG,
-          // flex: 1,
+          flex: 1,
           minWidth: 0,
-          minHeight: 280,
-          margin: "0 12PX",
+          minHeight: 400,
+          margin: "0 12px",
+          //中要素の左下寄せ
+          display: "flex",
+          alignItems: "flex-end",
         }}
       >
-        {previewImage === "" ? null : (<Image
-          width={300}
-          height={300}
-          src={previewImage}
-        />)}
-        {/* <Image
-          width={300}
-          height={300}
-          // src={previewImage}
-          src="http://localhost:8083/images/1709612134305-gmeioc-image (3).png"
-        /> */}
-        <Upload
-          // action=""
-          listType="picture-circle"
-          fileList={fileList}
-          onChange={handleChange}
-          customRequest={uploadImage}
-          style={{ width: '2000px' }}
+        <Image
+          // width={200}
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          style={{
+            borderRadius: "50%",
+            width: "200px",
+            height: "200px",
+            margin: "12px 48px",
+          }}
+        />
+        <div>
+          <h1>
+            佐藤　時穂
+          </h1>
+          <h4>
+            システムエンジニア
+          </h4>
+        </div>
+        <Button
+          style={{
+            margin: "12px 48px",
+          }}
+          onClick={() => { setOpenModal(true) }}
         >
-          {fileList.length >= 1 ? null : (
-            <button
-              style={{
-                border: 0,
-                background: 'none',
-              }}
-              type="button"
-            >
-              <PlusOutlined />
-              <div
-                style={{
-                  marginTop: 8,
-                }}
-              >
-                Upload
-              </div>
-            </button>)}
-        </Upload>
-        <Form
-          name="profile"
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-            ]}
-          >
-            <Input placeholder="email" />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-        </Form>
-
-
-
+          プロフィールを編集
+        </Button>
       </Content>
+      <Layout
+        style={{
+          padding: "24px 0px",
+          display: "flex",
+          flexDirection: "row",
+          // alignItems: "center",
+        }}
+      >
+        <Content
+          style={{
+            padding: "18px 12px",
+            background: token.colorBgContainer,
+            borderRadius: token.borderRadiusLG,
+            flex: 1,
+            minWidth: 0,
+            minHeight: 280,
+            margin: "0 12PX",
+          }}
+        >
+        </Content>
+
+        <Space
+          direction="vertical"
+          size="large"
+          style={{
+            display: 'flex',
+            flex: 2,
+          }}
+        >
+          {posts}
+        </Space>
+
+      </Layout>
+      <ProfileModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        refetch={refetch} />
     </Layout>
   );
 }

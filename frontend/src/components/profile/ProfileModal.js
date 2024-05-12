@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useMutationPost } from "../../api/post/api";
+import { useMutationProfile } from "../../api/profile/api";
 
 import {
     Button,
@@ -8,28 +8,11 @@ import {
     Input,
     Modal,
     Space,
+    Typography
 } from "antd";
 
-const { TextArea } = Input;
-
-
-
-const layout = {
-    // labelCol: {
-    //     span: 8,
-    // },
-    // wrapperCol: {
-    //     span: 16,
-    // },
-};
-const tailLayout = {
-    wrapperCol: {
-        // offset: 8,
-        // span: 16,
-    },
-};
-export default function PostModal(props) {
-    const { status, data, mutate } = useMutationPost();
+export default function ProfileModal(props) {
+    const { status, data, mutate } = useMutationProfile();
     const [form] = Form.useForm();
 
     if (status === "success") {
@@ -53,7 +36,7 @@ export default function PostModal(props) {
 
     return (
         <Modal
-            title="Post"
+            title="Profile"
             centered
             open={props.openModal}
             onCancel={() => props.setOpenModal(false)}
@@ -61,20 +44,19 @@ export default function PostModal(props) {
             footer={[]}
         >
             <Form
-                {...layout}
                 form={form}
-                name="post"
+                name="profile"
                 onFinish={onFinish}
             >
-                <Form.Item name='post' >
-                    <TextArea
-                        placeholder="何か投稿しよう"
-                        rows="10"
-                        style={{
-                            width: '100%',  /* 横幅 */
-                        }} />
+                <Typography.Title level={5}>Name</Typography.Title>
+                <Form.Item name='name' >
+                    <Input />
                 </Form.Item>
-                <Form.Item {...tailLayout}>
+                <Typography.Title level={5}>Email</Typography.Title>
+                <Form.Item name='email' >
+                    <Input />
+                </Form.Item>
+                <Form.Item>
                     <Space>
                         <Button type="primary" htmlType="submit">
                             Submit

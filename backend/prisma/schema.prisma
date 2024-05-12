@@ -12,8 +12,10 @@ model User {
   email   String   @unique
   password String
   name    String?
+  portrait String  @default("001.png")
   role    Role     @default(USER)
   posts   Post[]
+  likes   Like[]
   profile Profile?
   updated_at DateTime @db.DateTime(0) @default(now())
   created_at DateTime @db.DateTime(0) @default(now())
@@ -35,12 +37,35 @@ model Post {
   author     User       @relation(fields: [authorId], references: [id])
   authorId   Int
   categories Category[]
+  likes      Like[]
+  isLiked    Boolean    @default(false)
+}
+
+model Like {
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  post       Post       @relation(fields: [postId], references: [id])
+  postId     Int
+  author     User       @relation(fields: [authorId], references: [id])
+  authorId   Int
+  isCanceled Boolean    @default(false)
 }
 
 model Category {
   id    Int    @id @default(autoincrement())
   name  String
   posts Post[]
+}
+
+// View
+model user_post {
+  id       Int     @id
+  name     String
+  portrait String  @default("001.png")
+  post       String
+  updatedAt  DateTime   @updatedAt
+  isLiked    Boolean    @default(false)
 }
 
 enum Role {

@@ -1,12 +1,17 @@
 import React from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-
 import { login, logout } from '../features/auth/authSlice'
-import { useQueryVerify, useMutationLogout } from "../api/auth/api";
+import {
+  useQueryVerify,
+  useMutationLogout
+} from "../api/auth/api";
 
-import { Layout, Menu, Spin } from "antd";
+import {
+  Layout,
+  Menu
+} from "antd";
 
 import {
   UserOutlined,
@@ -16,9 +21,9 @@ import {
   NotificationOutlined
 } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+import LoginPage from "./LoginPage";
 
-
+const { Header, Footer } = Layout;
 
 const ReturnLayout = () => {
   const { status: logoutStatus, data: logoutData, mutate } = useMutationLogout();
@@ -28,10 +33,10 @@ const ReturnLayout = () => {
 
   if (logoutStatus === "success") {
     console.log(logoutData.result.status);
-    if(logoutData.result.status === true){
+    if (logoutData.result.status === true) {
       dispatch(logout());
-      navigate('/login');
-      return <></>
+      // navigate('/login');
+      return <LoginPage />
     }
   }
 
@@ -40,47 +45,18 @@ const ReturnLayout = () => {
       label: 'ホーム',
       key: 'home',
       icon: <HomeOutlined />,
+      onClick: () => navigate('/home'),
     },
     {
       label: 'つながり',
       key: 'friend',
       icon: <UserOutlined />,
-      // disabled: true,
     },
     {
       label: 'メッセージ',
       key: 'message',
       icon: <MessageOutlined />,
-      children: [
-        {
-          type: 'group',
-          label: 'Item 1',
-          children: [
-            {
-              label: 'Option 1',
-              key: 'setting:1',
-            },
-            {
-              label: 'Option 2',
-              key: 'setting:2',
-            },
-          ],
-        },
-        {
-          type: 'group',
-          label: 'Item 2',
-          children: [
-            {
-              label: 'Option 3',
-              key: 'setting:3',
-            },
-            {
-              label: 'Option 4',
-              key: 'setting:4',
-            },
-          ],
-        },
-      ],
+      onClick: () => navigate('/chat'),
     },
     {
       label: 'お知らせ',
@@ -90,8 +66,8 @@ const ReturnLayout = () => {
     {
       label: 'ログアウト',
       key: 'logout',
-      onClick: () => mutate(),
       icon: <LogoutOutlined />,
+      onClick: () => mutate(),
     },
   ];
 
@@ -118,14 +94,11 @@ const ReturnLayout = () => {
       </Header>
       <Layout
         style={{
-          padding: "24px 48px",
-          // background: token.colorBgContainer,
-          // borderRadius: token.borderRadiusLG,
+          padding: "24px",
         }}
       >
         <Outlet />
       </Layout>
-
       <Footer
         style={{
           textAlign: "center",

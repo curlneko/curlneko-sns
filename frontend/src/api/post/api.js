@@ -40,20 +40,3 @@ export const useMutationPost = (values) => {
         },
     })
 }
-
-// export const useMutationLogout = () => {
-//     return useMutation({
-//         mutationKey: "useMutationLogout",
-//         //フェッチする関数
-//         mutationFn: async () => {
-//             const res = await fetch(serverURL + '/logout', {
-//                 method: "POST",
-//                 headers: {
-//                     "Content-Type": "application/json",
-//                 },
-//                 credentials: "include",
-//             });
-//             return res.json();
-//         },
-//     })
-// }

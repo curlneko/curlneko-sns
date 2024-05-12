@@ -12,6 +12,7 @@ import Layout from "./pages/Layout";
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import ChatPage from "./pages/ChatPage";
 import LoginPage from "./pages/LoginPage";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "chat",
+        element: <ChatPage />,
       },
     ],
   },

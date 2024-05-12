@@ -16,9 +16,10 @@ class PostRepository {
     return post;
   }
 
-  async update(where) {
+  async update(where, data) {
     const post = await prisma.post.update({
       where: where,
+      data: data,
     });
     return post;
   }

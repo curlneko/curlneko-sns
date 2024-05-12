@@ -10,10 +10,13 @@ const authRouter = require("./routes/auth/authController");
 const userRouter = require("./routes/user/userController");
 const postRouter = require("./routes/post/postController");
 const profileController = require("./routes/profile/profileController");
+const likeController = require("./routes/like/likeController");
 
+// ミドルウェア
 const verify = require("./middleware/tokenHandler");
 
-var app = express();
+// http
+let app = express();
 
 app.use(
   cors({
@@ -44,7 +47,6 @@ app.use("/*", async (req, res, next) => {
       next();
     } else {
       const result = await verify(token)
-      console.log(result);
       if (result) {
         console.log("you have login")
         return res.status(200).json({
@@ -71,7 +73,6 @@ app.use("/*", async (req, res, next) => {
       });
     } else {
       const result = await verify(token)
-      console.log(result);
       if (result) {
         next();
       } else {
@@ -123,6 +124,7 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 app.use("/profile", profileController);
+app.use("/like", likeController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

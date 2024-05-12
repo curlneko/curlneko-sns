@@ -20,29 +20,12 @@ export const useMutationUploadPicture = (values) => {
     })
 }
 
-export const useMutationLogout = () => {
+export const useMutationProfile = (values) => {
     return useMutation({
-        mutationKey: "useMutationLogout",
-        //フェッチする関数
-        mutationFn: async () => {
-            const res = await fetch(serverURL + '/logout', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            return res.json();
-        },
-    })
-}
-
-export const useMutationRegister = (values) => {
-    return useMutation({
-        mutationKey: "useMutationRegister",
+        mutationKey: "useMutationProfile",
         //フェッチする関数
         mutationFn: async (values) => {
-            const res = await fetch(serverURL + '/register', {
+            const res = await fetch(serverURL + '/profile', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

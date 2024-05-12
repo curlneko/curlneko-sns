@@ -6,12 +6,13 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const PostService = require("../../services/postService");
-const postService = new PostService();
+const LikeService = require("../../services/likeService");
+const likeService = new LikeService();
 
 router.get("/", async (req, res, next) => {
   try {
-    const posts = await postService.getAllUserPosts();
+    const likes = await likeService.getAllLikes();
+    console.log(likes)
     return res.json({
       result: {
         status: true,
@@ -34,11 +35,11 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   // データを取得
-  const { post } = req.body;
+  const { like } = req.body;
   const authorId = res.locals.jwt.id;
 
   try {
-    const result = await postService.post(post, authorId);
+    const result = await likeService.like(like, authorId);
     res.status(200).json({
       result: {
         status: true,

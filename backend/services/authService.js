@@ -74,18 +74,6 @@ class Auth {
     console.log("verifyToken");
     console.log(token);
     const result = jwt.verify(token, "secret")
-    // (error, payload) => {
-    //   if (error) {
-    //     console.log(error);
-    //     console.log("AuthError");
-    //     return {};
-    //   } else {
-    //     console.log("verify ok");
-    //     return payload;
-    //   }
-    // }
-    console.log(result);
-    console.log("decode");
     return result;
   }
 }

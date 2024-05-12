@@ -10,7 +10,6 @@ const auth = new Auth();
 // アカウント新規追加
 router.post("/register", checkSchema(registerSchema), async (req, res, next) => {
   const result = validationResult(req);
-  console.log(result);
 
   if (result.errors.length === 0) {
     // データを取得
@@ -51,11 +50,9 @@ router.post("/register", checkSchema(registerSchema), async (req, res, next) => 
 
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
-  console.log(req.body);
 
   try {
     const token = await auth.login(email, password);
-    console.log(token);
 
     res.cookie("jwt", token, {
       sameSite: "none",
@@ -86,7 +83,6 @@ router.post("/login", async (req, res, next) => {
 //Token確認API
 router.get("/verify", async (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log(token);
   try {
     const user = await auth.verifyToken(token);
     return res.json({
